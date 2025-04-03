@@ -78,6 +78,7 @@ USER root
 
 ARG tempDir=/tmp/jenkins-n-keytar
 ARG bashEnv=/etc/bash.bashrc
+ARG sshEnv=/etc/profile.d/npm_setup.sh
 ARG shEnv=/etc/profile
 
 # Next, make the file available to all to read and source
@@ -97,8 +98,11 @@ ARG loginFile=pam.d.config
 # Copy the PAM configuration options to allow auto unlocking of the gnome keyring
 RUN mkdir ${tempDir}
 COPY ${loginFile} ${tempDir}/${loginFile}
+COPY env.bashrc ${tempDir}/env.bashrc
 COPY env.profile ${tempDir}/env.profile
 COPY local.profile ${tempDir}/.profile
+RUN cat ${tempDir}/env.bashrc >> /root/.bashrc
+RUN cat ${tempDir}/env.bashrc >> /home/jenkins/.bashrc
 
 # Enable unlocking for ssh
 RUN cat ${tempDir}/${loginFile}>>/etc/pam.d/sshd
@@ -116,10 +120,9 @@ RUN cat ${tempDir}/dbus_start>>${sshEnv}
 
 # Enable for all bash profiles
 # Add the dbus launch before exiting when not running interactively
-RUN printf "\n. /etc/profile\n" >> /home/jenkins/.bashrc
-RUN printf "\necho jenkins | gnome-keyring-daemon --unlock --components=secrets > /dev/null\n" >> /home/jenkins/.profile
+RUN sed -i -e "/# If not running interactively, don't do anything/r ${tempDir}/dbus_start" -e //N ${bashEnv}
+RUN printf "\necho jenkins | gnome-keyring-daemon --unlock --components=secrets > /dev/null\n" >> /home/jenkins/.bashrc
 RUN cat ${tempDir}/env.profile >> /etc/profile && cp ${tempDir}/.profile /home/jenkins/.profile && chown jenkins:jenkins /home/jenkins/.profile && cp ${tempDir}/.profile /root/.profile
-
 
 # Cleanup any temp files we have created
 RUN rm -rdf ${tempDir}
