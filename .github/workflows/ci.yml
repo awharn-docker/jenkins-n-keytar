@@ -199,12 +199,3 @@ jobs:
       run: |
         docker buildx imagetools inspect ${{ env.DOCKERHUB_REPO }}:${{ steps.meta.outputs.version }}
         docker buildx imagetools inspect ${{ env.GHCR_REPO }}:${{ steps.meta.outputs.version }}
-
-  update-downstream:
-    runs-on: ubuntu-22.04-arm
-    needs: merge
-    steps:
-      - name: Update Downstream
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        run: gh workflow run -R awharn-docker/jenkins-n-zowe-cli -r master ci.yml
