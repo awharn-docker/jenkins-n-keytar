@@ -23,12 +23,12 @@ RUN apt-get -q update &&\
     apt-get -q autoremove &&\
     sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd &&\
     mkdir -p /var/run/sshd &&\
-    # Install JDK 11 and 17
+    # Install JDK 17
     # Add node version 20 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
     # expect is also installed so that you can use that to login to your npm registry if you need to
     curl -sL "https://deb.nodesource.com/setup_$DEFAULT_NODE_VERSION.x" | bash - &&\
     apt-get -q update &&\
-    apt-get -qqy install --no-install-recommends nodejs openjdk-17-jre-headless openjdk-11-jre-headless openjdk-17-jdk openjdk-11-jdk maven ca-certificates-java &&\
+    apt-get -qqy install --no-install-recommends nodejs openjdk-17-jre-headless openjdk-17-jdk maven ca-certificates-java &&\
     update-ca-certificates -f &&\
     apt-get -q autoremove &&\
     ## Install GH CLI
@@ -52,8 +52,8 @@ ENV LC_ALL=en_US.UTF-8
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN dpkg-reconfigure dash
 
-ENV JAVA_HOME_AMD=/usr/lib/jvm/java-11-openjdk-amd64
-ENV JAVA_HOME_ARM=/usr/lib/jvm/java-11-openjdk-arm64
+ENV JAVA_HOME_AMD=/usr/lib/jvm/java-17-openjdk-amd64
+ENV JAVA_HOME_ARM=/usr/lib/jvm/java-17-openjdk-arm64
 
 # Add Jenkins user
 RUN useradd jenkins --shell /bin/bash --create-home
