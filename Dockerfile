@@ -17,7 +17,7 @@ RUN apt-get -q update &&\
 # Upgrade and install packages, use HTTPS mirrors
 RUN apt-get -q update &&\
     apt-get -qqy upgrade --no-install-recommends &&\
-    apt-get -qqy install --no-install-recommends locales sudo xxd wget unzip zip git curl libxss1 sshpass vim nano expect build-essential software-properties-common gnome-keyring libsecret-1-dev dbus-x11 rsync &&\
+    apt-get -qqy install --no-install-recommends locales sudo xxd wget unzip zip git curl libxss1 sshpass vim nano expect build-essential software-properties-common gnome-keyring libsecret-1-dev dbus-x11 rsync python3 swig golang &&\
     locale-gen en_US.UTF-8 &&\
     apt-get -qqy install --no-install-recommends openssh-server &&\
     apt-get -q autoremove &&\
