@@ -19,7 +19,8 @@ RUN apt-get -q update &&\
     apt-get -qqy upgrade --no-install-recommends &&\
     apt-get -qqy install --no-install-recommends locales sudo xxd wget unzip zip git curl libxss1 sshpass vim nano expect build-essential software-properties-common gnome-keyring libsecret-1-dev libsecret-tools dbus-x11 rsync python3 python3-pip python3-venv python3-yaml swig golang fonts-roboto libgbm-dev jq cmake xvfb &&\
     locale-gen en_US.UTF-8 &&\
-    apt-get -qqy install --no-install-recommends openssh-server &&\
+	add-apt-repository ppa:git-core/ppa -y &&\
+    apt-get -qqy install --no-install-recommends git openssh-server &&\
     apt-get -q autoremove &&\
     sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd &&\
     mkdir -p /var/run/sshd &&\
